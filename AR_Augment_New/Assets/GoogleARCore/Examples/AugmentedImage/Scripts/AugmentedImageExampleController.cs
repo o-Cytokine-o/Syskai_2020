@@ -40,9 +40,9 @@ namespace GoogleARCore.Examples.AugmentedImage
     /// </remarks>
     public class AugmentedImageExampleController : MonoBehaviour
     {
-        /// <summary>
-        /// A prefab for visualizing an AugmentedImage.
-        /// </summary>
+        //デバッグ用テキスト
+        public Text DebugText;
+
         public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
 
         /// <summary>
@@ -104,6 +104,16 @@ namespace GoogleARCore.Examples.AugmentedImage
                         AugmentedImageVisualizerPrefab, anchor.transform);
                     visualizer.Image = image;
                     _visualizers.Add(image.DatabaseIndex, visualizer);
+                    //一つ前のオブジェクトとの相対座標を取得する
+                    AugmentedImageVisualizer PrevVisualizer = null;
+                    if(PrevVisualizer == null){
+                        _visualizers.TryGetValue(image.DatabaseIndex, out PrevVisualizer);
+                        DebugText.text = (888).ToString();
+                    }
+                    else{
+                        _visualizers.TryGetValue(image.DatabaseIndex, out var CurrentVisualizer);
+                        DebugText.text = (123).ToString();
+                    }
                 }
                 else if (image.TrackingState == TrackingState.Stopped && visualizer != null)
                 {

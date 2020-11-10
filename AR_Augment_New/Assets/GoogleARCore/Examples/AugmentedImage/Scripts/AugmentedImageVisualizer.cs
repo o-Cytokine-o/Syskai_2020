@@ -52,7 +52,7 @@ namespace GoogleARCore.Examples.AugmentedImage
 
             float halfWidth = Image.ExtentX / 2;
             float halfHeight = Image.ExtentZ / 2;
-            DistinationMarker.transform.localPosition = (halfWidth　* (new Vector3(-1,0,0) * 5)) + (halfHeight * Vector3.back * 5);
+            DistinationMarker.transform.localPosition = (new Vector3(0,0,0)　) + (new Vector3(0,0,0) * 1f ) ;
 
             /* float halfWidth = Image.ExtentX / 2;
             float halfHeight = Image.ExtentZ / 2;
