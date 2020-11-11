@@ -125,7 +125,7 @@ namespace GoogleARCore
               "a fixed focus camera, setting focus mode to Auto Focus will be ignored. " +
               "Similarly, on devices where tracking requires auto focus mode, seting focus mode " +
               "to Fixed Focus will be ignored.")]
-        public CameraFocusMode CameraFocusMode = CameraFocusMode.AutoFocus;
+        public CameraFocusMode CameraFocusMode = CameraFocusMode.FixedFocus;
 
         /// <summary>
         /// Chooses which <see cref="GoogleARCore.AugmentedFaceMode"/> the ARCore session uses.
