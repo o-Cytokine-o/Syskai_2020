@@ -42,6 +42,7 @@ namespace GoogleARCore.Examples.AugmentedImage
     {
         //デバッグ用テキスト
         public Text DebugText;
+        private AugmentedImageVisualizer PrevVisualizer = null;
 
         public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
 
@@ -105,14 +106,14 @@ namespace GoogleARCore.Examples.AugmentedImage
                     visualizer.Image = image;
                     _visualizers.Add(image.DatabaseIndex, visualizer);
                     //一つ前のオブジェクトとの相対座標を取得する
-                    AugmentedImageVisualizer PrevVisualizer = null;
+                    
                     if(PrevVisualizer == null){
                         _visualizers.TryGetValue(image.DatabaseIndex, out PrevVisualizer);
-                        DebugText.text = (888).ToString();
+                        DebugText.text = (777).ToString();
                     }
                     else{
                         _visualizers.TryGetValue(image.DatabaseIndex, out var CurrentVisualizer);
-                        DebugText.text = (123).ToString();
+                        DebugText.text = (CurrentVisualizer.Image.CenterPose.position - PrevVisualizer.Image.CenterPose.position).ToString();
                     }
                 }
                 else if (image.TrackingState == TrackingState.Stopped && visualizer != null)
