@@ -109,11 +109,13 @@ namespace GoogleARCore.Examples.AugmentedImage
                     
                     if(PrevVisualizer == null){
                         _visualizers.TryGetValue(image.DatabaseIndex, out PrevVisualizer);
-                        DebugText.text = (777).ToString();
+                        DebugText.text = PrevVisualizer.Image.Name + "\n";
                     }
                     else{
                         _visualizers.TryGetValue(image.DatabaseIndex, out var CurrentVisualizer);
-                        DebugText.text = (CurrentVisualizer.Image.CenterPose.position - PrevVisualizer.Image.CenterPose.position).ToString();
+                        //DebugText.text = (CurrentVisualizer.Image.CenterPose.position - PrevVisualizer.Image.CenterPose.position).ToString() + "¥n";
+                        DebugText.text = DebugText.text + CurrentVisualizer.Image.Name + "\n";
+                        _visualizers.TryGetValue(image.DatabaseIndex, out PrevVisualizer);
                     }
                 }
                 else if (image.TrackingState == TrackingState.Stopped && visualizer != null)
