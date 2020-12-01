@@ -5,14 +5,14 @@ using System;
 
 public class Keiro : MonoBehaviour
 {
-    private var graph;
+    private Dijkstra graph;
 
     public Keiro()
     {
 
         //n:頂点の個数
         int n = 1;
-        graph = new Dikstra(n);
+        graph = new Dijkstra(n);
 
         //Add(枝元,枝先,重み)
         //頂点n個分の情報を手動で追加
@@ -38,13 +38,10 @@ public class Keiro : MonoBehaviour
 
     private Dijkstra.Result GetMindistance(int nowVertex, int toVertex)
     {
-        Dikstra.Result result = graph.GetMinCost(nowVertex, toVertex);
+        Dijkstra.Result result = graph.GetMinCost(nowVertex, toVertex);
         return result;
     }
 
-    private var GetKeiro(int nowVertex){
-        
-    }
 
 
 }

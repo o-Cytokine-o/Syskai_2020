@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class Dijkstra : MonoBehaviour
 {
@@ -30,14 +31,14 @@ public class Dijkstra : MonoBehaviour
     /// <param name="a">接続元の頂点</param>
     /// <param name="b">接続先の頂点</param>
     /// <param name="cost">コスト</param>
-    public void Add(int a, int b, long cost = 1)
+    public void Add(int a, int b, int cost = 1)
             => _graph[a].Add(new Edge(b, cost));
 
     /// <summary>
     /// 最短経路のコストを取得
     /// </summary>
     /// <param name="start">開始頂点</param>
-    public Result GetMinCost(int start)
+    public Result GetMinCost(int start,int goal)
     {
         var keiroList = new List<int>(); 
 
