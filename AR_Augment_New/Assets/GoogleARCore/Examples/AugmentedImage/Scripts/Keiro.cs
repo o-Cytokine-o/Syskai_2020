@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Keiro : MonoBehaviour
+public class Keiro 
 {
     private Dijkstra graph;
 
@@ -11,7 +11,7 @@ public class Keiro : MonoBehaviour
     {
 
         //n:頂点の個数
-        int n = 1;
+        int n = 6;
         graph = new Dijkstra(n);
 
         //Add(枝元,枝先,重み)
@@ -36,7 +36,7 @@ public class Keiro : MonoBehaviour
         graph.Add(5, 4, 6);　
     }
 
-    private Dijkstra.Result GetMindistance(int nowVertex, int toVertex)
+    public Dijkstra.Result GetMindistance(int nowVertex, int toVertex)
     {
         Dijkstra.Result result = graph.GetMinCost(nowVertex, toVertex);
         return result;

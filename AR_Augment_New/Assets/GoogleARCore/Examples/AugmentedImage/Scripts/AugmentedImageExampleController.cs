@@ -40,6 +40,9 @@ namespace GoogleARCore.Examples.AugmentedImage
     /// </remarks>
     public class AugmentedImageExampleController : MonoBehaviour
     {
+        //経路コンストラクタ実行
+        public Keiro Keiro = new Keiro();
+
         //デバッグ用テキスト
         public Text DebugText;
         private AugmentedImageVisualizer PrevVisualizer = null;
@@ -107,13 +110,23 @@ namespace GoogleARCore.Examples.AugmentedImage
                     _visualizers.Add(image.DatabaseIndex, visualizer);
                     //一つ前のオブジェクトとの相対座標を取得する
                     
-                    if(PrevVisualizer == null){
-                        _visualizers.TryGetValue(image.DatabaseIndex, out PrevVisualizer);
-                        DebugText.text = PrevVisualizer.Image.Name;
-                    }
-                    else{
-                        _visualizers.TryGetValue(image.DatabaseIndex, out var CurrentVisualizer);
-                        DebugText.text = DebugText.text + CurrentVisualizer.Image.Name;
+                    // if(PrevVisualizer == null){
+                    //     _visualizers.TryGetValue(image.DatabaseIndex, out PrevVisualizer);
+                    //     DebugText.text = PrevVisualizer.Image.Name;
+                    // }
+                    // else{
+                    //     _visualizers.TryGetValue(image.DatabaseIndex, out var CurrentVisualizer);
+                    //     DebugText.text = DebugText.text + CurrentVisualizer.Image.Name;
+                    // }
+
+                    if(visualizer.Image.Name == "p1"){
+                        int ImageNum = int.Parse(visualizer.Image.Name.Substring(1));
+                        Dijkstra.Result result = Keiro.GetMindistance(ImageNum,5);
+                        foreach (var rt in result.route)
+                        {
+                            DebugText.text += "[" + rt.ToString()+"]";
+                        }
+                        
                     }
                 }
                 else if (image.TrackingState == TrackingState.Stopped && visualizer != null)
