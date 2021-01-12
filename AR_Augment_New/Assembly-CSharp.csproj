@@ -62,6 +62,7 @@
      <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\AugmentedImageVisualizer.cs" />
      <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\Dijkstra.cs" />
      <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\Keiro.cs" />
+     <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\Marker.cs" />
      <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\NavigationPanel.cs" />
      <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\PriorityQueue.cs" />
      <Compile Include="Assets\GoogleARCore\Examples\CloudAnchors\Scripts\ARCoreWorldOriginHelper.cs" />

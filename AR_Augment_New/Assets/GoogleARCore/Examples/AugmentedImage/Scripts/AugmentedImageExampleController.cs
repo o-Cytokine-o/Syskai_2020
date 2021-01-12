@@ -46,8 +46,15 @@ namespace GoogleARCore.Examples.AugmentedImage
         //ナビ用のボタン設定
         public Button Btn_menu1;
 
+        //方角表示オブジェクト
+        public GameObject obj_arrow;
+
         //デバッグ用テキスト
         public Text DebugText;
+
+        public Anchor a2 = null;
+
+        //public Camera Cam;
 
         private AugmentedImageVisualizer PrevVisualizer = null;
         private AugmentedImageVisualizer CurrentVisualizer = null;
@@ -73,11 +80,6 @@ namespace GoogleARCore.Examples.AugmentedImage
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
             Btn_menu1.onClick.AddListener(Navigate);
-        }
-
-        public void Start()
-        {
-            
         }
 
         /// <summary>
@@ -119,10 +121,13 @@ namespace GoogleARCore.Examples.AugmentedImage
                         AugmentedImageVisualizerPrefab, anchor.transform);
                     visualizer.Image = image;
                     _visualizers.Add(image.DatabaseIndex, visualizer);
+                    a2 = anchor;
                     //最後に読み取ったvisualizerを保存
                     if(CurrentVisualizer == null){
                         _visualizers.TryGetValue(image.DatabaseIndex, out CurrentVisualizer);
+                        
                     }
+                    
                     
                     //一つ前のオブジェクトとの相対座標を取得する
                     // if(PrevVisualizer == null){
@@ -141,6 +146,13 @@ namespace GoogleARCore.Examples.AugmentedImage
                 }
             }
 
+            if(CurrentVisualizer != null){
+                DebugText.text = CurrentVisualizer.DistinationMarker.transform.position.ToString();
+                DebugText.text =  DebugText.text +  obj_arrow.transform.position.ToString();
+                
+            }
+            arrowController();
+
             // Show the fit-to-scan overlay if there are no images that are Tracking.
             foreach (var visualizer in _visualizers.Values)
             {
@@ -149,7 +161,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                     FitToScanOverlay.SetActive(false);
                     return;
                 }
-            }
+            } 
 
             FitToScanOverlay.SetActive(true);
         }
@@ -168,6 +180,16 @@ namespace GoogleARCore.Examples.AugmentedImage
             else{
                 DebugText.text += "マーカーが見つかりません";
             }
+        }
+
+        //方角表示オブジェクトのコントロール
+        public void arrowController(){
+            if(CurrentVisualizer != null)
+            {
+                obj_arrow.transform.LookAt(CurrentVisualizer.DistinationMarker.transform.position);
+                
+            }
+            
         }
     }
 }
