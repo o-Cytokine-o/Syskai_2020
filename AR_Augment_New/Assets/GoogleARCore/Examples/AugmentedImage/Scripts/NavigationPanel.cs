@@ -7,11 +7,16 @@ using UnityEngine.UI;
 public class NavigationPanel : MonoBehaviour
 {
     public RectTransform rect;
-
+    //public Camera cam;
+    
     Vector3 startPoint;
     Vector3 endPoint;
     Vector3 prevPoint;
     float panelDiff;
+    
+
+    //デバッグ用テキスト
+    public Text DebugText;
 
     void Start()
     {
@@ -22,7 +27,8 @@ public class NavigationPanel : MonoBehaviour
     void Update()
     {
         // タッチされているかチェック
-        if (Input.touchCount > 0) {
+        if (Input.touchCount > 0) 
+        {
             // タッチ情報の取得
             Touch touch = Input.GetTouch(0);
 
@@ -56,7 +62,9 @@ public class NavigationPanel : MonoBehaviour
                 }
             }
         }
+        
         rect.position = new Vector3(rect.position.x,Mathf.Clamp(rect.position.y, 0f, 1400f),rect.position.z);
+        //DebugText.text = rect.position.ToString();
     }
 
     //自動で開く
