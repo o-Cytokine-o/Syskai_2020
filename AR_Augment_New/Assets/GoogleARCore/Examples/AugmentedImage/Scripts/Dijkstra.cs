@@ -15,7 +15,10 @@ public class Dijkstra : MonoBehaviour
     {
         N = n;
         _graph = new List<Edge>[n];
-        for (int i = 0; i < n; i++) _graph[i] = new List<Edge>();
+        for (int i = 0; i < n; i++)
+        {
+            _graph[i] = new List<Edge>();
+        }
     }
 
     

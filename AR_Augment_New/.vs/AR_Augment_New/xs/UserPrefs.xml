@@ -1,7 +1,7 @@
 ﻿<Properties StartupConfiguration="{F0D46FDC-20FD-4243-506E-60D138111AED}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GoogleARCore/Examples/HelloAR/Scripts/Keiro.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GoogleARCore/Examples/AugmentedImage/Scripts/Dijkstra.cs">
     <Files>
-      <File FileName="Assets/GoogleARCore/Examples/HelloAR/Scripts/Keiro.cs" Line="10" Column="9" />
+      <File FileName="Assets/GoogleARCore/Examples/AugmentedImage/Scripts/Dijkstra.cs" Line="20" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -10,10 +10,13 @@
             <Node name="Assets" expanded="True">
               <Node name="GoogleARCore" expanded="True">
                 <Node name="Examples" expanded="True">
-                  <Node name="HelloAR" expanded="True">
+                  <Node name="AugmentedImage" expanded="True">
                     <Node name="Scripts" expanded="True">
-                      <Node name="Keiro.cs" selected="True" />
+                      <Node name="Dijkstra.cs" selected="True" />
                     </Node>
+                  </Node>
+                  <Node name="HelloAR" expanded="True">
+                    <Node name="Scripts" expanded="True" />
                   </Node>
                 </Node>
               </Node>
@@ -25,7 +28,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="1b4d174f-7649-4469-a340-3c4a28c5080b" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="fe6b5a1a-93bb-4a38-8b79-0e353093b692" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
