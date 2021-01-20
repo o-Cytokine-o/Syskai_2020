@@ -73,6 +73,7 @@
     <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\Marker.cs" />
     <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\NavigationPanel.cs" />
     <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\PriorityQueue.cs" />
+    <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\Yazirushi.cs" />
     <Compile Include="Assets\GoogleARCore\Examples\AugmentedImage\Scripts\graphPoint.cs" />
     <Compile Include="Assets\GoogleARCore\Examples\CloudAnchors\Scripts\ARCoreWorldOriginHelper.cs" />
     <Compile Include="Assets\GoogleARCore\Examples\CloudAnchors\Scripts\ARKitHelper.cs" />
