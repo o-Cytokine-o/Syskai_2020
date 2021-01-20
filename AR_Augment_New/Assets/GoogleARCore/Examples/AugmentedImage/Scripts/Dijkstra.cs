@@ -9,7 +9,7 @@ public class Dijkstra : MonoBehaviour
 
     public int N { get; }               // 頂点の数
     private List<Edge>[] _graph;        // グラフの辺のデータ
-    int[] last_update_node_ids= (new int[6]).Select(v => 99999).ToArray();   // 各頂点距離の最後に変更した頂点ID保存用 未計測状態として初期化
+    int[] last_update_node_ids= (new int[11]).Select(v => 99999).ToArray();   // 各頂点距離の最後に変更した頂点ID保存用 未計測状態として初期化
  
     public Dijkstra(int n)
     {
@@ -50,7 +50,7 @@ public class Dijkstra : MonoBehaviour
         for (int i = 0; i < N; i++) cost[i] = 1000000000;
         cost[start] = 0;
 
-        int[] last_update_node_ids = (new int[6]).Select(v => 99999).ToArray();   // 各頂点距離の最後に変更した頂点ID保存用 未計測状態として初期化
+        int[] last_update_node_ids = (new int[11]).Select(v => 99999).ToArray();   // 各頂点距離の最後に変更した頂点ID保存用 未計測状態として初期化
         last_update_node_ids[start] = -1;
         Result result = new Result(true);
 
