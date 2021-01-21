@@ -43,8 +43,14 @@ namespace GoogleARCore.Examples.AugmentedImage
         //経路コンストラクタ
         public Keiro Keiro = new Keiro();
 
+        //矢印
+        public Yazirushi _yazirushi=new Yazirushi();
+
         //ナビ用のボタン設定
         public Button Btn_menu1;
+        public Button Btn_menu2;
+        public Button Btn_menu3;
+        public Button Btn_menu4;
 
         //方角表示オブジェクト
         public GameObject obj_arrow;
@@ -79,7 +85,10 @@ namespace GoogleARCore.Examples.AugmentedImage
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
-            Btn_menu1.onClick.AddListener(Navigate);
+            Btn_menu1.onClick.AddListener(() => Navigate(1));
+            Btn_menu2.onClick.AddListener(() => Navigate(2));
+            Btn_menu3.onClick.AddListener(() => Navigate(3));
+            Btn_menu4.onClick.AddListener(() => Navigate(4));
         }
 
         /// <summary>
@@ -146,11 +155,11 @@ namespace GoogleARCore.Examples.AugmentedImage
                 }
             }
 
-            if(CurrentVisualizer != null){
+            /* if(CurrentVisualizer != null){
                 DebugText.text = CurrentVisualizer.DistinationMarker.transform.position.ToString();
                 DebugText.text =  DebugText.text +  obj_arrow.transform.position.ToString();
                 
-            }
+            } */
             arrowController();
 
             // Show the fit-to-scan overlay if there are no images that are Tracking.
@@ -166,16 +175,25 @@ namespace GoogleARCore.Examples.AugmentedImage
             FitToScanOverlay.SetActive(true);
         }
 
-        public void Navigate()
+        public void Navigate(int Distinatuon)
         {
             if(CurrentVisualizer != null)
             {
                 int ImageNum = int.Parse(CurrentVisualizer.Image.Name.Substring(1));
-                Dijkstra.Result result = Keiro.GetMindistance(ImageNum,5);
+                int Yanomuki = -1;
+                Dijkstra.Result result = Keiro.GetMindistance(ImageNum,Distinatuon);
+
+                if(result.route.Count>0)
+                {
+                    Yanomuki = _yazirushi.Getyazirushi(result);
+                }
+                
                 foreach (var rt in result.route)
                 {
                     DebugText.text += "[" + rt.ToString()+"]";
+                    
                 }
+                DebugText.text += string.Format("矢{0}",Yanomuki);
             }
             else{
                 DebugText.text += "マーカーが見つかりません";
