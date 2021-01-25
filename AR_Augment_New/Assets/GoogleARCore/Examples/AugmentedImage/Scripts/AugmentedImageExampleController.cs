@@ -22,6 +22,8 @@ namespace GoogleARCore.Examples.AugmentedImage
 {
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
+    using System;
+    using System.Linq;
     using GoogleARCore;
     using UnityEngine;
     using UnityEngine.UI;
@@ -58,12 +60,27 @@ namespace GoogleARCore.Examples.AugmentedImage
         //デバッグ用テキスト
         public Text DebugText;
 
-        public Anchor a2 = null;
+        //現在地を取得しナビが開始できるかのフラグ
+        public bool NaviFlag = false;
+        //目的地に着いたか
+        public bool GoalFlag = false;
+
+        //目的地のノード番号
+        public int Distination = 0;
+
+        //ダイクストラの結果（チェックポイントの順番と総コスト）
+        Dijkstra.Result result;
+
+        //オブジェクトをスポーンさせるための方角
+        int Yanomuki = -1;
 
         //public Camera Cam;
 
         private AugmentedImageVisualizer PrevVisualizer = null;
         private AugmentedImageVisualizer CurrentVisualizer = null;
+        AugmentedImageVisualizer visualizer2 = null;
+
+        private AugmentedImage LateImage = null;
 
         public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
 
@@ -88,7 +105,8 @@ namespace GoogleARCore.Examples.AugmentedImage
             Btn_menu1.onClick.AddListener(() => Navigate(1));
             Btn_menu2.onClick.AddListener(() => Navigate(2));
             Btn_menu3.onClick.AddListener(() => Navigate(3));
-            Btn_menu4.onClick.AddListener(() => Navigate(4));
+            Btn_menu4.onClick.AddListener(() => Navigate(8));
+
         }
 
         /// <summary>
@@ -96,6 +114,8 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public void Update()
         {
+            
+
             // Exit the app when the 'back' button is pressed.
             if (Input.GetKey(KeyCode.Escape))
             {
@@ -129,24 +149,12 @@ namespace GoogleARCore.Examples.AugmentedImage
                     visualizer = (AugmentedImageVisualizer)Instantiate(
                         AugmentedImageVisualizerPrefab, anchor.transform);
                     visualizer.Image = image;
+                    LateImage = image;
                     _visualizers.Add(image.DatabaseIndex, visualizer);
-                    a2 = anchor;
                     //最後に読み取ったvisualizerを保存
-                    if(CurrentVisualizer == null){
-                        _visualizers.TryGetValue(image.DatabaseIndex, out CurrentVisualizer);
-                        
-                    }
+
+                    CurrentVisualizer = visualizer;
                     
-                    
-                    //一つ前のオブジェクトとの相対座標を取得する
-                    // if(PrevVisualizer == null){
-                    //     _visualizers.TryGetValue(image.DatabaseIndex, out PrevVisualizer);
-                    //     DebugText.text = PrevVisualizer.Image.Name;
-                    // }
-                    // else{
-                    //     _visualizers.TryGetValue(image.DatabaseIndex, out var CurrentVisualizer);
-                    //     DebugText.text = DebugText.text + CurrentVisualizer.Image.Name;
-                    // }
                 }
                 else if (image.TrackingState == TrackingState.Stopped && visualizer != null)
                 {
@@ -154,13 +162,59 @@ namespace GoogleARCore.Examples.AugmentedImage
                     GameObject.Destroy(visualizer.gameObject);
                 }
             }
+            if(Distination == 0 && NaviFlag == false && GoalFlag == false && CurrentVisualizer != null){
+                DebugText.text = "目的地を\n選択してください";
+            }
+            if(_visualizers.Count >= 2){
+                //最初にスポーンさせたオブジェクトを非表示にする
+                _visualizers.First().Value.gameObject.SetActive(false);
 
-            /* if(CurrentVisualizer != null){
-                DebugText.text = CurrentVisualizer.DistinationMarker.transform.position.ToString();
-                DebugText.text =  DebugText.text +  obj_arrow.transform.position.ToString();
+                //そのオブジェクトの情報を持つ要素を削除
+                _visualizers.Remove(_visualizers.First().Key);
+
+                //最後のオブジェクトを現在のオブジェクトにする
+                CurrentVisualizer = _visualizers.First().Value;
+
+                //最新の現在地からルートを再計算
+                if(NaviFlag == true && int.Parse(CurrentVisualizer.Image.Name.Substring(1,CurrentVisualizer.Image.Name.Length - 1)) != Distination){
+                    Navigate(Distination);
+                }
+            }
+
+            if (NaviFlag == true){
+                DebugText.text = "方角表示に従って\n移動してください";
+                //DebugText.text = "現在地:"+CurrentVisualizer.Image.Name.Substring(1,CurrentVisualizer.Image.Name.Length - 1);
+                //DebugText.text += "@"+Distination.ToString();
+                foreach (var rt in result.cost)
+                {
+                    //DebugText.text += "[" + rt.ToString()+"]";
+                    
+                }
+                if (int.Parse(CurrentVisualizer.Image.Name.Substring(1,CurrentVisualizer.Image.Name.Length - 1)) == Distination)
+                {
+                    DebugText.text = "目的地に到着しました";
+                    _visualizers.First().Value.gameObject.transform.position = CurrentVisualizer.Image.CenterPose.position;
+                    //目的地についたので初期化
+                    Distination = 0;
+                    NaviFlag = false;
+                    GoalFlag = true;
+                    //次のチェックポイントにマーカーを設置する（しなおす）
+                    _visualizers.TryGetValue(LateImage.DatabaseIndex, out visualizer2);
+                    visualizer2.gameObject.transform.position = CurrentVisualizer.DistinationMarker.transform.localPosition;
+                    return;
+                }
+                //経路結果から設置すべき座標をオブジェクトの座標に更新する
+                else if (result.cost.Count >= 2)
+                {
+                    //まだ目的地に着いていないので次のチェックポイントへ
+                    ConvCoodinate(result.cost[1], Yanomuki, CurrentVisualizer.DistinationMarker.transform);
+                }
                 
-            } */
-            arrowController();
+                //次のチェックポイントに方角表示オブジェクトを向ける
+                arrowController();
+                
+            }
+            
 
             // Show the fit-to-scan overlay if there are no images that are Tracking.
             foreach (var visualizer in _visualizers.Values)
@@ -177,26 +231,29 @@ namespace GoogleARCore.Examples.AugmentedImage
 
         public void Navigate(int Distinatuon)
         {
+            Distination = Distinatuon;
+
             if(CurrentVisualizer != null)
             {
-                int ImageNum = int.Parse(CurrentVisualizer.Image.Name.Substring(1));
-                int Yanomuki = -1;
-                Dijkstra.Result result = Keiro.GetMindistance(ImageNum,Distinatuon);
+                int ImageNum = int.Parse(CurrentVisualizer.Image.Name.Substring(1,CurrentVisualizer.Image.Name.Length - 1));
+                Yanomuki = -1;
+                result = Keiro.GetMindistance(ImageNum,Distinatuon);
+                NaviFlag = true;
 
                 if(result.route.Count>0)
                 {
                     Yanomuki = _yazirushi.Getyazirushi(result);
                 }
                 
-                foreach (var rt in result.route)
+                /* foreach (var rt in result.cost)
                 {
                     DebugText.text += "[" + rt.ToString()+"]";
                     
-                }
-                DebugText.text += string.Format("矢{0}",Yanomuki);
+                } */
+                //DebugText.text += string.Format("矢{0}",Yanomuki);
             }
             else{
-                DebugText.text += "マーカーが見つかりません";
+                DebugText.text = "マーカーが見つかりません";
             }
         }
 
@@ -204,10 +261,44 @@ namespace GoogleARCore.Examples.AugmentedImage
         public void arrowController(){
             if(CurrentVisualizer != null)
             {
-                obj_arrow.transform.LookAt(CurrentVisualizer.DistinationMarker.transform.position);
+                obj_arrow.transform.LookAt(CurrentVisualizer.DistinationMarker.transform.localPosition);
                 
             }
             
         }
+
+        //距離と方角から座標に変換
+        public void ConvCoodinate(int distance, int direction, Transform trans){
+            float x = (float)distance * (float)Math.Cos(DireNum2Rad(direction)) + trans.localPosition.x;
+            float z = (float)distance * (float)Math.Sin(DireNum2Rad(direction)) + trans.localPosition.z;
+            trans.localPosition = new Vector3(x,trans.localPosition.y,z);
+        }
+        //方角番号からラジアンに変換する関数
+        public double DireNum2Rad(int n){
+            int baseDire = (int)CurrentVisualizer.Image.CenterPose.rotation.eulerAngles.y;
+            switch (n)
+            {
+                case 0:
+                    return (90-baseDire) * (Math.PI / 180);
+                case 1:
+                    return (45-baseDire) * (Math.PI / 180);
+                case 2:
+                    return (0-baseDire) * (Math.PI / 180);
+                case 3:
+                    return (315-baseDire) * (Math.PI / 180);
+                case 4:
+                    return (270-baseDire) * (Math.PI / 180);
+                case 5:
+                    return (225-baseDire) * (Math.PI / 180);
+                case 6:
+                    return (180-baseDire) * (Math.PI / 180);
+                case 7:
+                    return (135-baseDire) * (Math.PI / 180);
+                
+                default:
+                    return 90 * (Math.PI / 180);
+            }
+        }
+
     }
 }
